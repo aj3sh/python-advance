@@ -34,64 +34,52 @@ class ExampleClass:
     def merge(self, merge_list):
         '''
         STEPS:
-        1. Take the head of the first list
-        2. If this head is good head then add it to the linearization of A
-         and remove all from the list in the merge
-        Otherwise, look at the head of the next list and take it if it is a good head.
-        3. Then repeat the operation until all the classes are removed or it is impossible
-         to find a good head (will raise an exception)
+            1. Take the head of the first list
+            2. If this head is good head then add it to the linearization of A
+                and remove all from the list in the merge
+                Otherwise, look at the head of the next list and take it if it is a good head.
+            3. Then repeat the operation until all the classes are removed or it is impossible
+            to find a good head (will raise an exception)
         '''
         mro_list = []
-        i = 0
-        while i < len(merge_list):
-            bad_head_index = set()
-            head = merge_list[i][0]
-
-            j = 0
-            # checking if head is good head (not in the tail of other list)
-            while j < len(merge_list):
-                l = merge_list[j]
-
-                if head in l[1:]:
-                    # head is not a good head
-                    
-                    # checking if conflict
-                    if i in bad_head_index:
-                        raise Exception(f'Error generating MRO {merge_list}')
-                    bad_head_index.add(i)
-
-                    # taking next first as a head
-                    head = merge_list[j][0]
-                    
-                    # resetting loop
-                    i = j
-                    j = 0
-                    continue
-                    
-                j += 1
-            
-            # taking good head
-            good_head = merge_list[i][0]
-
+        while len(merge_list) != 0:
+            good_head = self._get_good_head(merge_list)
             # removing good head from all lists
-            for l in merge_list:
-                if good_head in l:
-                    l.remove(good_head)
+            [ l.remove(good_head) for l in merge_list if good_head in l ]
 
             # filtering empty list
             merge_list = [l for l in merge_list if len(l) > 0]
 
             # adding to mro list
             mro_list.append(good_head)
-            
-            # resetting index
-            i = 0
 
         return mro_list
 
-    @property
-    def mro(self):
-        return self._mro
+    def _get_good_head(self, merge_list) -> "ExampleClass":
+        """returns a good head from a merge list"""
+        bad_head_index = set() # for checking MRO conflict
+        head = merge_list[0][0] # taking initial head
+
+        i = 0
+        # checking if head is good head (not in the tail of other list)
+        while i < len(merge_list):
+            l = merge_list[i]
+            if head in l and head != l[0]: # if not good head
+                # checking if conflict
+                if i in bad_head_index:
+                    raise Exception(f'Error generating MRO {l}')
+                else:
+                    bad_head_index.add(i)
+
+                # taking next first as a head
+                head = l[0]
+                
+                # resetting loop
+                i = 0
+            else:
+                i += 1
+        
+        return head
 
 O = ExampleClass('O')
 A = ExampleClass('A', O)
