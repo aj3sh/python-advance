@@ -26,7 +26,7 @@ class ExampleClass:
         '''
         if len(self.bases) == 0:
             return [self]
-        
+
         return [self] + self.merge(
             [base.linearization() for base in self.bases] + [list(self.bases)]
         )
@@ -45,7 +45,7 @@ class ExampleClass:
         while len(merge_list) != 0:
             good_head = self._get_good_head(merge_list)
             # removing good head from all lists
-            [ l.remove(good_head) for l in merge_list if good_head in l ]
+            [l.remove(good_head) for l in merge_list if good_head in l]
 
             # filtering empty list
             merge_list = [l for l in merge_list if len(l) > 0]
@@ -57,14 +57,14 @@ class ExampleClass:
 
     def _get_good_head(self, merge_list) -> "ExampleClass":
         """returns a good head from a merge list"""
-        bad_head_index = set() # for checking MRO conflict
-        head = merge_list[0][0] # taking initial head
+        bad_head_index = set()  # for checking MRO conflict
+        head = merge_list[0][0]  # taking initial head
 
         i = 0
         # checking if head is good head (not in the tail of other list)
         while i < len(merge_list):
             l = merge_list[i]
-            if head in l and head != l[0]: # if not good head
+            if head in l and head != l[0]:  # if not good head
                 # checking if conflict
                 if i in bad_head_index:
                     raise Exception(f'Error generating MRO {l}')
@@ -73,13 +73,14 @@ class ExampleClass:
 
                 # taking next first as a head
                 head = l[0]
-                
+
                 # resetting loop
                 i = 0
             else:
                 i += 1
-        
+
         return head
+
 
 O = ExampleClass('O')
 A = ExampleClass('A', O)
@@ -91,7 +92,7 @@ F = ExampleClass('F', D, E)
 
 print(F.linearization())
 
-# L[ A(O) ] 
+# L[ A(O) ]
 # = A + merge(L(O), O)
 # = A + merge(O, O)
 # = A + O
@@ -100,7 +101,7 @@ print(F.linearization())
 # L[ B(O) ] = BO
 # L[ C(O) ] = CO
 
-# L[ D(A, B) ] 
+# L[ D(A, B) ]
 # = D + merge(L[A], L[B], AB)
 # = D + merge(AO, BO, AB)
 # = D + A merge(O, BO, B)

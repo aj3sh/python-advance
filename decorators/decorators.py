@@ -1,12 +1,36 @@
-def three_value_adder(func):
-    def _wrapper(value1, value2, value3):
-        return func(value1, value2) + value3
+"""
+A method can be a decorator if it accepts a function as argument 
+and returns a closure function.
+
+@decorator
+def function():
+    pass
+
+IS EQUAL TO:
+function = decorator(function)
+"""
+
+
+def power(_func):
+    def _wrapper(*args, **kwargs):
+        result = _func(*args, **kwargs)
+        return result * result
     return _wrapper
 
-@three_value_adder
-def add_value(number1, number2):
-    return number1 + number2
 
-if __name__ == '__main__':
-    sum = add_value(2, 3, 4)
-    print(f'Sum {sum}')
+@power
+def add(num1, num2):
+    return num1 + num2
+
+
+# SIMILAR TO
+# add = power(add)
+
+
+def main():
+    result = add(1, 2)
+    print(result)  # 9
+
+
+if __name__ == "__main__":
+    main()

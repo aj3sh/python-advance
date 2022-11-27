@@ -13,18 +13,21 @@ class A:
 def initB(b, y):
     b.y = y
 
+
 def runB(b):
     print(f'run B, x: {b.x}, y: {b.y}')
 
+
 B = type(
-    'B', # name of class
-    (), # base classes 
+    'B',  # name of class
+    (),  # base classes
     {   # attributes
         'x': 1,
         '__init__': initB,
         'run': runB,
     }
 )
+
 
 def main():
     # running A
@@ -34,6 +37,7 @@ def main():
     # running B
     b = B(3)
     b.run()
+
 
 if __name__ == '__main__':
     main()
