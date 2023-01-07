@@ -1,3 +1,15 @@
+"""
+class Foo:
+    pass
+
+x = Foo()
+type(x)  # <class '__main__.Foo'>
+type(Foo)  # <class 'type'>
+
+Conclusion: "class" is an object of "type" (also called meta class).
+"""
+
+
 class A:
     x = 1
 
